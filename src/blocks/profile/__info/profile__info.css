@@ -1,0 +1,16 @@
+.profile__info {
+  margin-top: 23px;
+  margin-bottom: 25px;
+  margin-left: 3.75px;
+  display: grid;
+  grid-template-areas:
+    "title image"
+    "subtitle .";
+}
+
+@media screen and (max-width: 1060px) {
+  .profile__info {
+    margin-left: 10px;
+    margin-top: 25px;
+  }
+}
