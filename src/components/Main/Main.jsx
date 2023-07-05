@@ -1,29 +1,17 @@
-import { useEffect, useState } from "react";
-import api from "../../utils/api";
 import Card from "../Card/Card.jsx";
+import CurrentUserContext from "../../contexts/CurrentUserContext";
+import { useContext } from "react";
 
 export default function Main({
   onEditProfile,
   onAddPlace,
   onEditAvatar,
   onCardClick,
+  onDelete,
+  onCardLike,
+  card,
 }) {
-  const [userName, setUserName] = useState("");
-  const [userDiscription, setUserDiscription] = useState("");
-  const [userAvatar, setUserAvatar] = useState("");
-  const [card, setCard] = useState([]);
-
-  useEffect(() => {
-    Promise.all([api.getInfo(), api.getCards()]).then(
-      ([dataUser, dataCards]) => {
-        setUserName(dataUser.name);
-        setUserDiscription(dataUser.about);
-        setUserAvatar(dataUser.avatar);
-        dataCards.forEach((data) => (data.myid = dataUser._id));
-        setCard(dataCards);
-      }
-    );
-  }, []);
+  const currentUser = useContext(CurrentUserContext);
 
   return (
     <main className="main">
@@ -34,11 +22,19 @@ export default function Main({
             type="button"
             onClick={onEditAvatar}
           >
-            <img src={userAvatar} alt="Аватар" className="profile__avatar" />
+            <img
+              src={currentUser.avatar ? currentUser.avatar : "#"}
+              alt="Аватар"
+              className="profile__avatar"
+            />
           </button>
           <div className="profile__info">
-            <h1 className="profile__title">{userName}</h1>
-            <p className="profile__subtitle">{userDiscription}</p>
+            <h1 className="profile__title">
+              {currentUser.name ? currentUser.name : ""}
+            </h1>
+            <p className="profile__subtitle">
+              {currentUser.about ? currentUser.about : ""}
+            </p>
             <button
               className="profile__edit-button"
               type="button"
@@ -57,7 +53,12 @@ export default function Main({
           {card.map((data) => {
             return (
               <li className="card__list" key={data._id}>
-                <Card card={data} onCardClick={onCardClick} />
+                <Card
+                  card={data}
+                  onCardClick={onCardClick}
+                  onDelete={onDelete}
+                  onCardLike={onCardLike}
+                />
               </li>
             );
           })}
