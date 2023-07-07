@@ -36,6 +36,7 @@ export default function PopupWithForm({
             className={`form__button form__button_valid ${
               isValid ? "" : "form__button_invalid"
             }`}
+            disabled={isSend || !isValid}
           >
             {isSend ? "..." : titleButton || "Сохранить"}
           </button>

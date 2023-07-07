@@ -79,26 +79,31 @@ function App() {
   }
 
   useEffect(() => {
-    Promise.all([api.getInfo(), api.getCards()]).then(
-      ([dataUser, dataCards]) => {
+    Promise.all([api.getInfo(), api.getCards()])
+      .then(([dataUser, dataCards]) => {
         setCurrentUser(dataUser);
         setCard(dataCards);
-      }
-    );
+      })
+      .catch((err) =>
+        console.error(`Ошибка при загрузке начальных данных ${err} `)
+      );
   }, []);
 
   function handleDeleteSubmit(evt) {
     evt.preventDefault();
     setIsSend(true);
-    api.deleteCard(deleteCardId).then(() => {
-      setCard(
-        card.filter((item) => {
-          return item._id !== deleteCardId;
-        })
-      );
-      closeAllPopups();
-      setIsSend(false);
-    });
+    api
+      .deleteCard(deleteCardId)
+      .then(() => {
+        setCard(
+          card.filter((item) => {
+            return item._id !== deleteCardId;
+          })
+        );
+        closeAllPopups();
+        setIsSend(false);
+      })
+      .catch((err) => console.error(`Ошибка при удалении ${err} `));
   }
 
   const handleLike = useCallback(
@@ -131,32 +136,45 @@ function App() {
 
   function handleUpdateUser(dataUser, reset) {
     setIsSend(true);
-    api.setUserInfo(dataUser).then((res) => {
-      setCurrentUser(res);
-      closeAllPopups();
-      reset();
-      setIsSend(false);
-    });
+    api
+      .setUserInfo(dataUser)
+      .then((res) => {
+        setCurrentUser(res);
+        closeAllPopups();
+        reset();
+        setIsSend(false);
+      })
+      .catch((err) =>
+        console.error(`Ошибка при редактировании профиля ${err} `)
+      );
   }
 
   function handleUpdateAvatar(dataUser, reset) {
     setIsSend(true);
-    api.setNewAvatar(dataUser).then((res) => {
-      setCurrentUser(res);
-      closeAllPopups();
-      reset();
-      setIsSend(false);
-    });
+    api
+      .setNewAvatar(dataUser)
+      .then((res) => {
+        setCurrentUser(res);
+        closeAllPopups();
+        reset();
+        setIsSend(false);
+      })
+      .catch((err) =>
+        console.error(`Ошибка при редактировании аватара ${err} `)
+      );
   }
 
   function handleAddPlaceSubmit(dataCards, reset) {
     setIsSend(true);
-    api.addCard(dataCards).then((res) => {
-      setCard([res, ...card]);
-      closeAllPopups();
-      reset();
-      setIsSend(false);
-    });
+    api
+      .addCard(dataCards)
+      .then((res) => {
+        setCard([res, ...card]);
+        closeAllPopups();
+        reset();
+        setIsSend(false);
+      })
+      .catch((err) => console.error(`Ошибка при добавлении карточки ${err} `));
   }
 
   return (
